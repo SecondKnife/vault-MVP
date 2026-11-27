@@ -63,8 +63,7 @@ def test_vault_end_to_end_flow():
             db.add(user)
             db.commit()
             db.refresh(user)
-        token_pair = AuthService(db)._issue_token_pair(user)
-        access_token = token_pair.access_token
+        access_token = AuthService.create_access_token(str(user.id))
     finally:
         db.close()
 

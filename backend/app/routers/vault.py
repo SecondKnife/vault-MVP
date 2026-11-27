@@ -1,6 +1,7 @@
 import base64
 import hashlib
 from datetime import datetime, timezone
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from sqlalchemy.orm import Session
@@ -115,9 +116,10 @@ def acknowledge_pulled_submissions(
     db: Session = Depends(get_db),
 ):
     """Confirm local decryption and purge or mark pulled records."""
+    uuid_ids = [UUID(i) for i in data.ids]
     rows = (
         db.query(EncryptedSubmission)
-        .filter(EncryptedSubmission.id.in_(data.ids))
+        .filter(EncryptedSubmission.id.in_(uuid_ids))
         .all()
     )
     if purge:

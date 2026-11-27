@@ -8,7 +8,12 @@ from app.repositories.base import BaseRepository
 
 class UserRepository(BaseRepository[User]):
 
-    def find_by_id(self, user_id: UUID) -> User | None:
+    def find_by_id(self, user_id: UUID | str) -> User | None:
+        if isinstance(user_id, str):
+            try:
+                user_id = UUID(user_id)
+            except ValueError:
+                return None
         return self.db.query(User).filter(User.id == user_id).first()
 
     def find_by_email(self, email: str) -> User | None:

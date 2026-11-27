@@ -13,7 +13,12 @@ _KEEPALIVE_ARGS = {
     "keepalives_count": 5,
 }
 
-if settings.pgbouncer_mode:
+if settings.database_url.startswith("sqlite"):
+    engine = create_engine(
+        settings.database_url,
+        connect_args={"check_same_thread": False},
+    )
+elif settings.pgbouncer_mode:
     # PgBouncer in transaction-pooling mode manages the connection pool itself.
     # NullPool: SQLAlchemy opens/closes a connection per request (no client pool).
     # prepare_threshold=None: disables prepared statements (incompatible with

@@ -41,4 +41,11 @@ class VaultPullItem(StrictORMModel):
 
 
 class VaultAckRequest(StrictModel):
-    ids: list[UUID] = Field(..., min_length=1, max_length=500)
+    ids: list[str] = Field(..., min_length=1, max_length=500)
+
+    @field_validator("ids")
+    @classmethod
+    def _validate_uuids(cls, values: list[str]) -> list[str]:
+        for v in values:
+            UUID(v)
+        return values
