@@ -21,15 +21,22 @@ export default async function DashboardPage() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-2xl space-y-6 px-6 py-16">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Dashboard</h1>
+    <main className="mx-auto w-full max-w-4xl space-y-6 px-6 py-10">
+      <div className="flex items-center justify-between border-b border-zinc-200 pb-4 dark:border-zinc-800">
+        <div>
+          <h1 className="text-xl font-bold tracking-tight">
+            Hệ thống Nhập liệu Quân nhu & Suất ăn Bảo mật
+          </h1>
+          <p className="text-xs text-zinc-500">
+            Cổng tiếp nhận số liệu hậu cần từ xa — Dữ liệu được mã hóa đầu-cuối trước khi truyền
+          </p>
+        </div>
         <form action={logoutAction}>
           <button
             type="submit"
             className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium dark:border-zinc-700"
           >
-            Sign out
+            Đăng xuất
           </button>
         </form>
       </div>
@@ -38,13 +45,15 @@ export default async function DashboardPage() {
         <>
           <div className="rounded-lg border border-zinc-200 p-4 text-sm dark:border-zinc-800">
             <p>
-              Signed in as <span className="font-medium">{user.username}</span> ({user.email})
+              Tài khoản trực ban: <span className="font-medium">{user.username}</span> ({user.email})
             </p>
-            <p className="mt-1 text-zinc-600 dark:text-zinc-400">
-              Role: {user.role} · Plan: {user.plan}
+            <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
+              Vai trò: {user.role} · Trạng thái xác thực JWT hợp lệ
             </p>
           </div>
-          {session?.accessToken && <SecureSubmissionForm accessToken={session.accessToken} />}
+          {session?.accessToken && (
+            <SecureSubmissionForm accessToken={session.accessToken} username={user.username} />
+          )}
         </>
       ) : (
         <p className="text-sm text-zinc-600 dark:text-zinc-400">
