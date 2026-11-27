@@ -47,3 +47,14 @@ scripts/
 .coverage.*
 htmlcov/
 coverage.xml
+
+# Isolated local vault secrets & decrypted exports (never commit)
+local_vault/keys/
+local_vault/data/
+
+# Local virtualenvs & SQLite dev databases
+.venv/
+backend/.venv/
+local_vault/.venv/
+backend/local_dev.db
+backend/test.db

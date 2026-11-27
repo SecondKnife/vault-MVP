@@ -22,13 +22,14 @@ from app.utils.cloudflare import get_client_ip
 from app.utils.rate_limit import limiter
 
 # ── Routers ────────────────────────────────────────────────────────────────────
-from app.routers import auth, client
+from app.routers import auth, client, vault
 
 # ── Models (ensure tables are registered with SQLAlchemy) ─────────────────────
 from app.models import user as _user_model          # noqa: F401
 from app.models import token_denylist as _token_denylist_model  # noqa: F401
 from app.models import refresh_token as _refresh_token_model  # noqa: F401
 from app.models import cron_run as _cron_run_model  # noqa: F401
+from app.models import encrypted_submission as _encrypted_submission_model  # noqa: F401
 
 logging.basicConfig(
     level=logging.INFO,
@@ -290,6 +291,7 @@ _V1 = "/v1"
 
 app.include_router(auth.router, prefix=_V1)
 app.include_router(client.router, prefix=_V1)
+app.include_router(vault.router, prefix=_V1)
 
 
 # ── Health ─────────────────────────────────────────────────────────────────────

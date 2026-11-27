@@ -1,4 +1,5 @@
 import { auth } from "@/auth"
+import { SecureSubmissionForm } from "@/components/SecureSubmissionForm"
 import { logoutAction } from "@/lib/actions"
 import { apiFetch, ApiError } from "@/lib/api"
 import type { User } from "@/types"
@@ -34,14 +35,17 @@ export default async function DashboardPage() {
       </div>
 
       {user ? (
-        <div className="rounded-lg border border-zinc-200 p-4 text-sm dark:border-zinc-800">
-          <p>
-            Signed in as <span className="font-medium">{user.username}</span> ({user.email})
-          </p>
-          <p className="mt-1 text-zinc-600 dark:text-zinc-400">
-            Role: {user.role} · Plan: {user.plan}
-          </p>
-        </div>
+        <>
+          <div className="rounded-lg border border-zinc-200 p-4 text-sm dark:border-zinc-800">
+            <p>
+              Signed in as <span className="font-medium">{user.username}</span> ({user.email})
+            </p>
+            <p className="mt-1 text-zinc-600 dark:text-zinc-400">
+              Role: {user.role} · Plan: {user.plan}
+            </p>
+          </div>
+          {session?.accessToken && <SecureSubmissionForm accessToken={session.accessToken} />}
+        </>
       ) : (
         <p className="text-sm text-zinc-600 dark:text-zinc-400">
           {loadError ?? "No profile data available."}
