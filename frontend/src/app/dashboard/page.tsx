@@ -25,11 +25,13 @@ export default async function DashboardPage() {
       <div className="flex items-center justify-between border-b border-zinc-200 pb-4 dark:border-zinc-800">
         <div>
           <h1 className="text-xl font-bold tracking-tight">
-            Hệ thống Nhập liệu Quân nhu & Suất ăn Bảo mật
+            Nhập liệu Quân nhu & Suất ăn
           </h1>
-          <p className="text-xs text-zinc-500">
-            Cổng tiếp nhận số liệu hậu cần từ xa — Dữ liệu được mã hóa đầu-cuối trước khi truyền
-          </p>
+          {user && (
+            <p className="mt-0.5 text-xs text-zinc-500">
+              Tài khoản: <span className="font-medium text-zinc-700 dark:text-zinc-300">{user.username}</span>
+            </p>
+          )}
         </div>
         <form action={logoutAction}>
           <button
@@ -42,19 +44,9 @@ export default async function DashboardPage() {
       </div>
 
       {user ? (
-        <>
-          <div className="rounded-lg border border-zinc-200 p-4 text-sm dark:border-zinc-800">
-            <p>
-              Tài khoản trực ban: <span className="font-medium">{user.username}</span> ({user.email})
-            </p>
-            <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
-              Vai trò: {user.role} · Trạng thái xác thực JWT hợp lệ
-            </p>
-          </div>
-          {session?.accessToken && (
-            <SecureSubmissionForm accessToken={session.accessToken} username={user.username} />
-          )}
-        </>
+        session?.accessToken && (
+          <SecureSubmissionForm accessToken={session.accessToken} username={user.username} />
+        )
       ) : (
         <p className="text-sm text-zinc-600 dark:text-zinc-400">
           {loadError ?? "No profile data available."}

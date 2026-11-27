@@ -223,19 +223,6 @@ export function SecureSubmissionForm({
 
   return (
     <div className="space-y-6">
-      {/* Security Status Banner */}
-      <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-emerald-700/30 bg-emerald-950/10 px-4 py-3 text-xs dark:border-emerald-500/30 dark:bg-emerald-950/40">
-        <div className="flex items-center gap-2">
-          <span className="inline-block h-2.5 w-2.5 rounded-full bg-emerald-500" />
-          <span className="font-semibold text-emerald-800 dark:text-emerald-300">
-            Kênh nhập liệu Zero-Knowledge đang bật
-          </span>
-        </div>
-        <span className="font-mono text-[11px] text-emerald-700 dark:text-emerald-400">
-          AES-256-GCM + RSA-OAEP-4096 + SHA-256 • Pull 1 chiều về Local
-        </span>
-      </div>
-
       {/* Mode Switcher Tabs */}
       <div className="grid grid-cols-2 gap-2 rounded-lg bg-zinc-100 p-1 dark:bg-zinc-900">
         <button
@@ -579,14 +566,7 @@ export function SecureSubmissionForm({
 
         {lastReceipt && (
           <div className="rounded-md bg-emerald-50 p-3 text-xs text-emerald-900 dark:bg-emerald-950 dark:text-emerald-200">
-            <p className="font-semibold">
-              Đã mã hóa tại trình duyệt và đẩy vào hộp thư đệm an toàn
-            </p>
-            <p className="mt-1 font-mono break-all">
-              Mã phiếu: {lastReceipt.id}
-              <br />
-              SHA-256: {lastReceipt.sha256_checksum}
-            </p>
+            Đã gửi phiếu <span className="font-mono font-medium">{lastReceipt.id}</span> ({username})
           </div>
         )}
 
@@ -596,35 +576,32 @@ export function SecureSubmissionForm({
           className="w-full rounded-lg bg-emerald-800 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:opacity-50 sm:w-auto"
         >
           {submitting
-            ? "Đang mã hóa & Gửi bảo mật..."
+            ? "Đang gửi..."
             : mode === "suat_an"
-              ? "Mã hóa & Gửi Phiếu Báo Cơm"
-              : "Mã hóa & Gửi Phiếu Quân Nhu"}
+              ? "Gửi Phiếu Báo Cơm"
+              : "Gửi Phiếu Quân Nhu"}
         </button>
       </form>
 
       {receipts.length > 0 && (
-        <div className="rounded-lg border border-zinc-200 p-5 dark:border-zinc-800">
-          <h3 className="mb-3 text-sm font-semibold">
-            Biên nhận đã gửi (Server chỉ giữ bản mã hóa chờ Local kéo về)
+        <div className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
+          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">
+            Đang chờ xử lý ({receipts.filter((r) => r.status === "pending").length})
           </h3>
-          <ul className="space-y-2 text-xs">
-            {receipts.map((item) => (
-              <li
-                key={item.id}
-                className="flex flex-col gap-1 rounded border border-zinc-100 p-2.5 dark:border-zinc-800"
-              >
-                <div className="flex items-center justify-between">
+          <ul className="space-y-1.5 text-xs">
+            {receipts
+              .filter((item) => item.status === "pending")
+              .map((item) => (
+                <li
+                  key={item.id}
+                  className="flex items-center justify-between rounded border border-zinc-100 px-3 py-1.5 dark:border-zinc-800"
+                >
                   <span className="font-mono">{item.id}</span>
-                  <span className="rounded bg-zinc-100 px-2 py-0.5 uppercase dark:bg-zinc-800">
-                    {item.status}
+                  <span className="text-zinc-500">
+                    {username} · {item.status}
                   </span>
-                </div>
-                <span className="font-mono text-zinc-500 break-all">
-                  sha256: {item.sha256_checksum}
-                </span>
-              </li>
-            ))}
+                </li>
+              ))}
           </ul>
         </div>
       )}
