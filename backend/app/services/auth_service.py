@@ -167,6 +167,9 @@ class AuthService(BaseService):
         if repo.username_exists(data.username):
             raise api_error("USERNAME_TAKEN", "Username already taken", field="username")
 
+        if not settings.resend_api_key:
+            auto_verify = True
+
         token = secrets.token_urlsafe(32)
         user = repo.save(User(
             email=data.email,
@@ -225,7 +228,7 @@ class AuthService(BaseService):
         user.lockout_until = None
         self.db.commit()
 
-        if not user.is_verified:
+        if not user.is_verified and settings.resend_api_key:
             raise api_error("EMAIL_NOT_VERIFIED", "Email address not verified", status_code=403)
 
         return self._issue_session(user)
